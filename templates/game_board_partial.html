@@ -8,7 +8,7 @@
                     {% elif game.board[r][c] == " " %}
                         <td class="cell revealed">&nbsp;</td>
                     {% else %}
-                        <td class="cell revealed">{{ game.board[r][c] }}</td>
+                        <td class="cell revealed num-{{ game.board[r][c] }}">{{ game.board[r][c] }}</td>
                     {% endif %}
                 {% else %}
                     <td class="cell">
