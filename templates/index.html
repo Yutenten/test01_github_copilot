@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minesweeper</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .game-container {
+            display: inline-block;
+            margin: 20px auto;
+        }
+        .board {
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+        .cell {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #999;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #ddd;
+            cursor: pointer;
+        }
+        .revealed {
+            background-color: #fff;
+        }
+        .mine {
+            background-color: #f44336;
+            color: white;
+        }
+        .message {
+            margin: 20px 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .controls {
+            margin: 20px 0;
+        }
+        .controls button {
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // セルをクリックしたときの処理
+            $(document).on('click', '.cell-button', function(e) {
+                e.preventDefault();
+                const form = $(this).closest('form');
+                const row = form.find('input[name="row"]').val();
+                const col = form.find('input[name="col"]').val();
+                
+                $.ajax({
+                    url: '/reveal',
+                    type: 'POST',
+                    data: {row: row, col: col},
+                    success: function(response) {
+                        $('#game-container').html(response);
+                        // メッセージを更新
+                        if (response.includes("Game Over") || response.includes("Congratulations")) {
+                            const messageMatch = response.match(/<div class="message">(.*?)<\/div>/);
+                            if (messageMatch && messageMatch[1]) {
+                                $('.message').html(messageMatch[1]);
+                            }
+                        }
+                    }
+                });
+            });
+            
+            // 新しいゲームボタンの処理
+            $(document).on('click', '#new-game-btn', function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '/new_game',
+                    type: 'POST',
+                    success: function(response) {
+                        $('#game-container').html(response);
+                        $('.message').html('New game started');
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Minesweeper</h1>
+    <div class="message">{{ message }}</div>
+    
+    <div class="controls">
+        <button id="new-game-btn">New Game</button>
+    </div>
+    
+    <div id="game-container" class="game-container">
+        <table class="board">
+            {% for r in rows %}
+                <tr>
+                    {% for c in cols %}
+                        {% if game.revealed[r][c] or game.game_over %}
+                            {% if (r, c) in game.mine_positions %}
+                                <td class="cell revealed mine">M</td>
+                            {% elif game.board[r][c] == " " %}
+                                <td class="cell revealed">&nbsp;</td>
+                            {% else %}
+                                <td class="cell revealed">{{ game.board[r][c] }}</td>
+                            {% endif %}
+                        {% else %}
+                            <td class="cell">
+                                <form class="cell-form" style="margin:0; padding:0;">
+                                    <input type="hidden" name="row" value="{{ r }}">
+                                    <input type="hidden" name="col" value="{{ c }}">
+                                    <button type="button" class="cell-button" style="width: 100%; height: 100%; border: none; background: none; cursor: pointer;">&nbsp;</button>
+                                </form>
+                            </td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
