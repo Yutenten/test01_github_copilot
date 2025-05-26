@@ -7,15 +7,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #6a5acd;
+            --primary-color: #5b4ee6;
             --secondary-color: #f8f9fa;
-            --accent-color: #6a5acd;
-            --border-color: #dee2e6;
-            --text-color: #495057;
+            --accent-color: #4cc9f0;
+            --border-color: #e9ecef;
+            --text-color: #343a40;
             --empty-cell: #e9ecef;
             --revealed-cell: #ffffff;
-            --mine-color: #dc3545;
-            --hover-color: #7a6bdd;
+            --mine-color: #f72585;
+            --hover-color: #4361ee;
+            --gradient-start: #f8f9fa;
+            --gradient-end: #e9ecef;
         }
 
         body {
@@ -24,7 +26,8 @@
             margin: 0 auto;
             padding: 20px;
             text-align: center;
-            background-color: #f8f9fa;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            background-attachment: fixed;
             color: var(--text-color);
             line-height: 1.6;
         }
@@ -33,97 +36,151 @@
             margin: 20px 0;
             color: var(--primary-color);
             font-weight: 700;
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             letter-spacing: 1px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .game-container {
             display: inline-block;
             margin: 20px auto;
             background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1), 0 5px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
         }
 
         .board {
             border-collapse: separate;
-            border-spacing: 3px;
+            border-spacing: 4px;
             margin: 20px auto;
             background-color: var(--border-color);
-            border-radius: 5px;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            padding: 5px;
         }
 
         .cell {
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             text-align: center;
             font-size: 18px;
             font-weight: bold;
             background-color: var(--empty-cell);
             cursor: pointer;
-            transition: all 0.2s ease;
-            border-radius: 3px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border-radius: 6px;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
         .cell:hover {
             transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
         .revealed {
             background-color: var(--revealed-cell);
-            box-shadow: inset 0 0 3px rgba(0,0,0,0.1);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+            transform: none !important;
+            animation: reveal 0.3s ease-out;
+        }
+        
+        @keyframes reveal {
+            0% { transform: scale(0.9); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
         .mine {
-            background-color: var(--mine-color);
+            background: linear-gradient(135deg, var(--mine-color), #dc3545);
             color: white;
+            animation: shake 0.5s ease;
+        }
+        
+        .mine i {
+            font-size: 20px;
+            animation: glow 1.5s infinite alternate;
+        }
+        
+        @keyframes glow {
+            0% { text-shadow: 0 0 5px rgba(255,255,255,0.7); }
+            100% { text-shadow: 0 0 15px rgba(255,255,255,0.9), 0 0 30px rgba(255,255,255,0.5); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-3px); }
+            40%, 80% { transform: translateX(3px); }
         }
         
         .message {
             margin: 20px 0;
             font-size: 18px;
             font-weight: bold;
-            padding: 10px 15px;
-            border-radius: 5px;
+            padding: 12px 20px;
+            border-radius: 8px;
             background-color: var(--secondary-color);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.4s ease;
         }
 
         .controls {
-            margin: 20px 0;
+            margin: 25px 0;
         }
 
         .btn {
-            padding: 12px 24px;
+            padding: 12px 28px;
             font-size: 16px;
             cursor: pointer;
-            background-color: var(--primary-color);
+            background: linear-gradient(45deg, var(--primary-color), var(--hover-color));
             color: white;
             border: none;
             border-radius: 50px;
             font-weight: 600;
             letter-spacing: 0.5px;
             transition: all 0.3s ease;
-            box-shadow: 0 3px 10px rgba(106, 90, 205, 0.3);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
             outline: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
         }
 
         .btn:hover {
-            background-color: var(--hover-color);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(106, 90, 205, 0.4);
+            background: linear-gradient(45deg, var(--hover-color), var(--primary-color));
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(67, 97, 238, 0.4);
+        }
+
+        .btn:hover::after {
+            transform: scaleX(1);
         }
 
         .btn:active {
             transform: translateY(1px);
-            box-shadow: 0 2px 5px rgba(106, 90, 205, 0.4);
+            box-shadow: 0 3px 10px rgba(67, 97, 238, 0.4);
         }
 
         .cell-button {
@@ -134,31 +191,40 @@
             cursor: pointer;
             position: relative;
             z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         /* スタイリッシュな数字の色 */
         .revealed[class*="num-"] {
             font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .num-1 { color: #2196F3; }
-        .num-2 { color: #4CAF50; }
-        .num-3 { color: #FF9800; }
-        .num-4 { color: #9C27B0; }
-        .num-5 { color: #F44336; }
-        .num-6 { color: #009688; }
-        .num-7 { color: #795548; }
-        .num-8 { color: #607D8B; }
+        .num-1 { color: #4361ee; text-shadow: 0px 0px 1px rgba(67, 97, 238, 0.3); }
+        .num-2 { color: #06d6a0; text-shadow: 0px 0px 1px rgba(6, 214, 160, 0.3); }
+        .num-3 { color: #ff9f1c; text-shadow: 0px 0px 1px rgba(255, 159, 28, 0.3); }
+        .num-4 { color: #7209b7; text-shadow: 0px 0px 1px rgba(114, 9, 183, 0.3); }
+        .num-5 { color: #f72585; text-shadow: 0px 0px 1px rgba(247, 37, 133, 0.3); }
+        .num-6 { color: #00b4d8; text-shadow: 0px 0px 1px rgba(0, 180, 216, 0.3); }
+        .num-7 { color: #6c757d; text-shadow: 0px 0px 1px rgba(108, 117, 125, 0.3); }
+        .num-8 { color: #495057; text-shadow: 0px 0px 1px rgba(73, 80, 87, 0.3); }
 
         /* 情報パネル */
         .info-panel {
             display: flex;
             justify-content: space-between;
-            margin: 0 auto 15px;
-            max-width: 300px;
-            background-color: white;
-            padding: 12px 20px;
+            margin: 0 auto 20px;
+            max-width: 320px;
+            background: linear-gradient(to right, rgba(255,255,255,0.9), rgba(255,255,255,0.95));
+            padding: 14px 25px;
             border-radius: 50px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1), 0 2px 5px rgba(0,0,0,0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         .info-item {
@@ -166,40 +232,71 @@
             align-items: center;
             font-weight: bold;
             color: var(--text-color);
+            padding: 5px 10px;
+            transition: all 0.3s ease;
+        }
+
+        .info-item:hover {
+            transform: translateY(-2px);
         }
 
         .info-item i {
-            margin-right: 8px;
+            margin-right: 10px;
             color: var(--primary-color);
+            text-shadow: 0 0 5px rgba(67, 97, 238, 0.3);
         }
 
         /* 勝利/敗北メッセージの強調 */
         .win-message {
-            background-color: #4CAF50;
+            background: linear-gradient(45deg, #06d6a0, #4cc9f0);
             color: white;
             animation: pulse 1.5s infinite;
+            box-shadow: 0 5px 20px rgba(6, 214, 160, 0.4);
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
 
         .lose-message {
-            background-color: #F44336;
+            background: linear-gradient(45deg, #f72585, #dc3545);
             color: white;
+            box-shadow: 0 5px 20px rgba(247, 37, 133, 0.4);
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
 
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.03); }
+            50% { transform: scale(1.03); box-shadow: 0 8px 25px rgba(6, 214, 160, 0.5); }
             100% { transform: scale(1); }
         }
 
         @media (max-width: 500px) {
             .cell {
-                width: 32px;
-                height: 32px;
+                width: 34px;
+                height: 34px;
                 font-size: 16px;
+                border-radius: 5px;
             }
 
             h1 {
                 font-size: 2rem;
+            }
+            
+            .game-container {
+                padding: 15px;
+            }
+            
+            .board {
+                border-spacing: 3px;
+                padding: 3px;
+            }
+            
+            .info-panel {
+                max-width: 280px;
+                padding: 10px 20px;
+            }
+            
+            .btn {
+                padding: 10px 22px;
+                font-size: 15px;
             }
         }
     </style>
@@ -264,17 +361,17 @@
     
     <div class="info-panel">
         <div class="info-item">
-            <i class="fas fa-bomb"></i><span id="mines-count">10</span>
+            <i class="fas fa-bomb fa-fw fa-lg"></i><span id="mines-count">10</span>
         </div>
         <div class="info-item">
-            <i class="fas fa-flag"></i><span id="flags-count">0</span>
+            <i class="fas fa-flag fa-fw fa-lg"></i><span id="flags-count">0</span>
         </div>
     </div>
     
     <div class="message" style="display:none;">{{ message }}</div>
     
     <div class="controls">
-        <button id="new-game-btn" class="btn">New Game</button>
+        <button id="new-game-btn" class="btn"><i class="fas fa-sync-alt mr-2"></i> New Game</button>
     </div>
     
     <div id="game-container" class="game-container">
@@ -284,7 +381,7 @@
                     {% for c in cols %}
                         {% if game.revealed[r][c] or game.game_over %}
                             {% if (r, c) in game.mine_positions %}
-                                <td class="cell revealed mine">M</td>
+                                <td class="cell revealed mine"><i class="fas fa-bomb"></i></td>
                             {% elif game.board[r][c] == " " %}
                                 <td class="cell revealed">&nbsp;</td>
                             {% else %}

@@ -4,7 +4,7 @@
             {% for c in cols %}
                 {% if game.revealed[r][c] or game.game_over %}
                     {% if (r, c) in game.mine_positions %}
-                        <td class="cell revealed mine">M</td>
+                        <td class="cell revealed mine"><i class="fas fa-bomb"></i></td>
                     {% elif game.board[r][c] == " " %}
                         <td class="cell revealed">&nbsp;</td>
                     {% else %}
