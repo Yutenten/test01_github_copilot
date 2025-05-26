@@ -28,6 +28,7 @@
             text-align: center;
             background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
             background-attachment: fixed;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%236a5acd' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
             color: var(--text-color);
             line-height: 1.6;
         }
@@ -47,11 +48,18 @@
         .game-container {
             display: inline-block;
             margin: 20px auto;
-            background-color: white;
+            background-color: rgba(255, 255, 255, 0.95);
             padding: 25px;
             border-radius: 15px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1), 0 5px 10px rgba(0,0,0,0.05);
             transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .game-container:hover {
+            box-shadow: 0 15px 30px rgba(0,0,0,0.12), 0 8px 15px rgba(0,0,0,0.06);
         }
 
         .board {
@@ -71,18 +79,19 @@
             text-align: center;
             font-size: 18px;
             font-weight: bold;
-            background-color: var(--empty-cell);
+            background: linear-gradient(to bottom, #f1f3f5, #e9ecef);
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             border-radius: 6px;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
+            transform: translateY(0);
         }
 
-        .cell:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        .cell:not(.revealed):hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.12);
         }
 
         .revealed {
@@ -234,16 +243,24 @@
             color: var(--text-color);
             padding: 5px 10px;
             transition: all 0.3s ease;
+            border-radius: 20px;
         }
 
         .info-item:hover {
             transform: translateY(-2px);
+            background-color: rgba(255,255,255,0.5);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
         }
 
         .info-item i {
             margin-right: 10px;
             color: var(--primary-color);
             text-shadow: 0 0 5px rgba(67, 97, 238, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .info-item:hover i {
+            transform: scale(1.15);
         }
 
         /* 勝利/敗北メッセージの強調 */
